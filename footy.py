@@ -1,16 +1,15 @@
 import fire
-import api_client 
+import api_client
+import pprint
 
 api = api_client.ApiClient()
+
 
 class Competition(object):
 
     def get_competitions(self):
-        # return "All competitions"
         r = api.get_competitions()
-        print(r)
-
-        
+        pprint.pprint(r)
 
     def list_fixtures(self, league):
         return "Get fixtures for {league}".format(league=league)
