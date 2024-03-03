@@ -1,7 +1,6 @@
 from datetime import datetime
 from pytz import timezone
-
-# helper methods
+import beautify
 
 
 def humanize_competition_names(response):
@@ -39,9 +38,9 @@ def humanize_standings(response):
             {
                 "position": dict["position"],
                 "team": dict["team"]["name"],
-                "points": dict["points"]
+                "points": dict["points"],
             }
         )
 
-    return rv
-
+    table = beautify.create_standings_table(rv)
+    return table

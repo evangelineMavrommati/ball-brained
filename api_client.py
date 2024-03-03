@@ -8,9 +8,6 @@ from datetime import date
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
-# BASE_URL = "https://api.football-data.org" # not working atm
-
-
 class ApiClient(object):
 
     def get_competitions(self):

@@ -1,6 +1,9 @@
 import fire
 import api_client
 import pprint
+from halo import Halo
+from rich.console import Console
+
 
 api = api_client.ApiClient()
 
@@ -15,13 +18,20 @@ class Competition(object):
     # or
     # will return fixtures for rest of season
     def fixtures(self, league, matchday=None):
+        spinner = Halo(text='Loading', spinner='dots')
+        spinner.start()
+
         current_season = api.get_current_season_info(league)
         r = api.get_fixtures(league, current_season, matchday)
-        pprint.pprint(r)
+    
+        spinner.stop()
+    
+        pprint.pprint(r) # replace with beautify
 
     def standings(self, league):
         r = api.get_standings(league)
-        pprint.pprint(r)
+        console = Console()
+        console.print(r) 
 
     def teams(self, league):
         return "Get teams in league"
