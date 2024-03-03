@@ -7,20 +7,26 @@ api = api_client.ApiClient()
 
 class Competition(object):
 
-    def get_competitions(self):
+    def competitions(self):
         r = api.get_competitions()
         pprint.pprint(r)
 
-    def list_fixtures(self, league):
-        return "Get fixtures for {league}".format(league=league)
+    # will return fixtures for specified matchday
+    # or
+    # will return fixtures for rest of season
+    def fixtures(self, league, matchday=None):
+        current_season = api.get_current_season_info(league)
+        r = api.get_fixtures(league, current_season, matchday=None)
+        pprint.pprint(r)
 
-    def get_standings(self, league):
-        return "Get competition \n Get Standings"
+    def standings(self, league):
+        r = api.get_standings(league)
+        pprint.pprint(r)
 
-    def list_teams(self, league):
+    def teams(self, league):
         return "Get teams in league"
 
-    def get_top_scorers(self, league):
+    def top_scorers(self, league):
         return "Get top scoreres"
 
 
@@ -54,5 +60,9 @@ class Footy(object):
         self.player = Player()
 
 
-if __name__ == "__main__":
+def main():
     fire.Fire(Footy)
+
+
+if __name__ == "__main__":
+    main()
