@@ -6,8 +6,9 @@ import beautify
 def humanize_competition_names(response):
     rv = []
     for dict in response["competitions"]:
-        rv.append(dict["name"])
-    return rv
+        rv.append({"name": dict["name"], "code": dict["code"]})
+
+    return beautify.beautify_competition_names(rv)
 
 
 def humanize_fixture_info(response, matchday):
@@ -20,13 +21,9 @@ def humanize_fixture_info(response, matchday):
         utc = datetime.strptime(dict["utcDate"], "%Y-%m-%dT%H:%M:%S%z")
         when = utc.astimezone().strftime("%m-%d-%Y %H:%M")
 
-        if matchday is None:
-            matchday = dict["matchday"]
-            rv.append({"fixture": fixture, "matchday": matchday, "when": when})
-        else:
-            rv.append({"fixture": fixture, "when": when})
+        rv.append({"fixture": fixture, "matchday": dict["matchday"], "when": when})
 
-    return rv
+    return beautify.beautify_fixtures(rv)
 
 
 def humanize_standings(response):
@@ -42,5 +39,4 @@ def humanize_standings(response):
             }
         )
 
-    table = beautify.create_standings_table(rv)
-    return table
+    return beautify.create_standings_table(rv)
