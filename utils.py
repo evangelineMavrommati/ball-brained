@@ -12,7 +12,7 @@ def humanize_competition_names(response):
     return rv
 
 
-def humanize_fixture_info(response):
+def humanize_fixture_info(response, matchday):
     rv = []
     matches = response["matches"]
 
@@ -22,6 +22,10 @@ def humanize_fixture_info(response):
         utc = datetime.strptime(dict["utcDate"], "%Y-%m-%dT%H:%M:%S%z")
         when = utc.astimezone().strftime("%m-%d-%Y %H:%M")
 
-        rv.append({"fixture": fixture, "when": when})
+        if matchday is None:
+            matchday = dict["matchday"]
+            rv.append({"fixture": fixture, "matchday": matchday, "when": when})
+        else:
+            rv.append({"fixture": fixture, "when": when})
 
     return rv

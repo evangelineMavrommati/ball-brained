@@ -47,7 +47,7 @@ class ApiClient(object):
         matchday = matchday
         end_date = season_info["endDate"]
 
-        if matchday != None:
+        if matchday is not None:
             payload = {"matchday": matchday}
         else:
             today = date.today().strftime("%Y-%m-%d")
@@ -60,7 +60,7 @@ class ApiClient(object):
         )
 
         if response.status_code == 200:
-            r = utils.humanize_fixture_info(response.json())
+            r = utils.humanize_fixture_info(response.json(), matchday)
             return r
 
         else:

@@ -16,7 +16,7 @@ class Competition(object):
     # will return fixtures for rest of season
     def fixtures(self, league, matchday=None):
         current_season = api.get_current_season_info(league)
-        r = api.get_fixtures(league, current_season, matchday=None)
+        r = api.get_fixtures(league, current_season, matchday)
         pprint.pprint(r)
 
     def standings(self, league):
