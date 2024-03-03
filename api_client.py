@@ -66,18 +66,19 @@ class ApiClient(object):
         else:
             return {
                 "response_code": response.status_code,
-                "message": "Could not return {league} fixtures. Please try again later.",
+                "message": "Could not return % s fixtures. Please try again later." % league,
             }
 
     def get_standings(self, league):
         response = requests.get(
-            "https://api.football-data.org/v4/competitions/{league}/standings",
+            "https://api.football-data.org/v4/competitions/% s/standings" % league,
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            return response.json()
+            r = utils.humanize_standings(response.json())
+            return r
         else:
             return {
                 "response_code": response.status_code,
-                "message": "Could not return {league} standings. Please try again later.",
+                "message": "Could not return % s standings. Please try again later." % league,
             }

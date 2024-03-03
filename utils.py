@@ -1,6 +1,5 @@
 from datetime import datetime
 from pytz import timezone
-import json
 
 # helper methods
 
@@ -29,3 +28,20 @@ def humanize_fixture_info(response, matchday):
             rv.append({"fixture": fixture, "when": when})
 
     return rv
+
+
+def humanize_standings(response):
+    rv = []
+    standings = response["standings"][0]["table"]
+
+    for dict in standings:
+        rv.append(
+            {
+                "position": dict["position"],
+                "team": dict["team"]["name"],
+                "points": dict["points"]
+            }
+        )
+
+    return rv
+
