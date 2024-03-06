@@ -44,6 +44,14 @@ class Competition(object):
     def top_scorers(self, league):
         spinner.start()
 
+        # maybe split this out?
+        #
+        # instead do
+        #
+        # api.get_top_scorers(league)
+        # utils.humanize_top_scorers(response.json())
+        # beautify.create_top_scorers_table(rv)
+        #
         r = api.get_top_scorers(league)
 
         spinner.stop()
@@ -63,21 +71,11 @@ class Match(object):
         console.print(r)
 
 
-class Player(object):
-
-    def matches(self, player):
-        return "Show matches for {player}".format(player=player)
-
-    def player(self, player):
-        return "Show {player}".format(player=player)
-
-
 class Footy(object):
 
     def __init__(self):
         self.competition = Competition()
         self.match = Match()
-        self.player = Player()
 
 
 def main():

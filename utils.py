@@ -17,12 +17,15 @@ def humanize_fixture_info(response, matchday):
     matches = response["matches"]
 
     for dict in matches:
-        fixture = dict["homeTeam"]["name"] + " vs " + dict["awayTeam"]["name"]
+        home = dict["homeTeam"]["name"]
+        away = dict["awayTeam"]["name"]
 
         utc = datetime.strptime(dict["utcDate"], "%Y-%m-%dT%H:%M:%S%z")
         when = utc.astimezone().strftime("%m-%d-%Y %H:%M")
 
-        rv.append({"fixture": fixture, "matchday": dict["matchday"], "when": when})
+        rv.append(
+            {"home": home, "away": away, "matchday": dict["matchday"], "when": when}
+        )
 
     return beautify.beautify_fixtures(rv)
 
@@ -61,18 +64,11 @@ def humanize_top_scorers(response):
     return beautify.create_top_scorers_table(rv)
 
 
-def fetch_league(e):
-    e["league"]
-
-
-# def filter_for_team(team, e):
-
-
-# this needs to be refactored... 🤮
 # currently only returns scores for games on day of
+# team filter is not provided by API so will need to filter manually
 def humanize_scores(team, live, response):
     if response["resultSet"]["count"] == 0:
-        return "No matches today."
+        return "No matches match criteria. Please try again later."
 
     rv = []
 
@@ -83,6 +79,15 @@ def humanize_scores(team, live, response):
         home = dict["homeTeam"]["name"]
         away = dict["awayTeam"]["name"]
 
+        # skip iteration if a team filter was passed
+        # and it does not match the home or away team
+        if (
+            team is not None
+            and dict["homeTeam"]["shortName"] != team
+            and dict["awayTeam"]["shortName"] != team
+        ):
+            continue
+
         if dict["status"] == "FINISHED" and live is False:
             score = "%s - %s" % (
                 dict["score"]["fullTime"]["home"],
@@ -92,24 +97,22 @@ def humanize_scores(team, live, response):
 
         # probs needs to be fixed
         # do not know response shape for live fixture
-        # if dict["status"] == "LIVE":
-        #     score = (
-        #         dict["score"]["fullTime"]["home"]
-        #         + " - "
-        #         + dict["score"]["fullTime"]["away"]
-        #     )
-        #     minute = 60  # stub -- what minute is it?
-        #     rv.append(
-        #         {
-        #             "league": league,
-        #             "fixture": fixture,
-        #             "score": score,
-        #             "minute": minute,
-        #             "status": "LIVE",
-        #         }
-        #     )
+        if dict["status"] == "LIVE" and live is True:
+            score = (
+                dict["score"]["fullTime"]["home"]
+                + " - "
+                + dict["score"]["fullTime"]["away"]
+            )
+            minute = dict["minute"]
+            rv.append(
+                {
+                    "league": league,
+                    "home": home,
+                    "away": away,
+                    "minute": minute,
+                    "status": "LIVE",
+                }
+            )
 
-    # rv.sort
-    # rv.sort(key=fetch_league)
     rv.sort(key=lambda x: x["league"])
     return beautify.today_score_table(rv)
