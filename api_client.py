@@ -1,5 +1,4 @@
 import requests
-import utils
 from dotenv import load_dotenv
 import os
 from datetime import date
@@ -17,7 +16,7 @@ class ApiClient(object):
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            return utils.humanize_competition_names(response.json())
+            return response.json()
         else:
             return {
                 "response_code": response.status_code,
@@ -57,7 +56,7 @@ class ApiClient(object):
         )
 
         if response.status_code == 200:
-            return utils.humanize_fixture_info(response.json(), matchday)
+            return response.json()
         else:
             return {
                 "response_code": response.status_code,
@@ -71,7 +70,7 @@ class ApiClient(object):
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            return utils.humanize_standings(response.json())
+            return response.json()
         else:
             return {
                 "response_code": response.status_code,
@@ -85,7 +84,7 @@ class ApiClient(object):
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            return utils.humanize_top_scorers(response.json())
+            return response.json()
         else:
             return {
                 "response_code": response.status_code,
@@ -107,7 +106,7 @@ class ApiClient(object):
             params=payload,
         )
         if response.status_code == 200:
-            return utils.humanize_scores(team, live, response.json())
+            return response.json()
         else:
             return {
                 "response_code": response.status_code,

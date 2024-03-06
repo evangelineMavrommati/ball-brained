@@ -1,7 +1,5 @@
 from datetime import datetime
 from pytz import timezone
-import beautify
-import pprint
 
 
 def humanize_competition_names(response):
@@ -9,7 +7,7 @@ def humanize_competition_names(response):
     for dict in response["competitions"]:
         rv.append({"name": dict["name"], "code": dict["code"]})
 
-    return beautify.beautify_competition_names(rv)
+    return rv
 
 
 def humanize_fixture_info(response, matchday):
@@ -27,7 +25,7 @@ def humanize_fixture_info(response, matchday):
             {"home": home, "away": away, "matchday": dict["matchday"], "when": when}
         )
 
-    return beautify.beautify_fixtures(rv)
+    return rv
 
 
 def humanize_standings(response):
@@ -43,7 +41,7 @@ def humanize_standings(response):
             }
         )
 
-    return beautify.create_standings_table(rv)
+    return rv
 
 
 def humanize_top_scorers(response):
@@ -61,7 +59,7 @@ def humanize_top_scorers(response):
             }
         )
 
-    return beautify.create_top_scorers_table(rv)
+    return rv
 
 
 # currently only returns scores for games on day of
@@ -115,4 +113,4 @@ def humanize_scores(team, live, response):
             )
 
     rv.sort(key=lambda x: x["league"])
-    return beautify.today_score_table(rv)
+    return rv
