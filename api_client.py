@@ -8,6 +8,7 @@ from datetime import date
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
+
 class ApiClient(object):
 
     def get_competitions(self):
@@ -16,8 +17,7 @@ class ApiClient(object):
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            names = utils.humanize_competition_names(response.json())
-            return names
+            return utils.humanize_competition_names(response.json())
         else:
             return {
                 "response_code": response.status_code,
@@ -57,13 +57,12 @@ class ApiClient(object):
         )
 
         if response.status_code == 200:
-            r = utils.humanize_fixture_info(response.json(), matchday)
-            return r
-
+            return utils.humanize_fixture_info(response.json(), matchday)
         else:
             return {
                 "response_code": response.status_code,
-                "message": "Could not return % s fixtures. Please try again later." % league,
+                "message": "Could not return % s fixtures. Please try again later."
+                % league,
             }
 
     def get_standings(self, league):
@@ -72,10 +71,45 @@ class ApiClient(object):
             headers={"X-Auth-Token": API_KEY},
         )
         if response.status_code == 200:
-            r = utils.humanize_standings(response.json())
-            return r
+            return utils.humanize_standings(response.json())
         else:
             return {
                 "response_code": response.status_code,
-                "message": "Could not return % s standings. Please try again later." % league,
+                "message": "Could not return % s standings. Please try again later."
+                % league,
+            }
+
+    def get_top_scorers(self, league):
+        response = requests.get(
+            "https://api.football-data.org/v4/competitions/% s/scorers" % league,
+            headers={"X-Auth-Token": API_KEY},
+        )
+        if response.status_code == 200:
+            return utils.humanize_top_scorers(response.json())
+        else:
+            return {
+                "response_code": response.status_code,
+                "message": "Could not return % s top scorers. Please try again later."
+                % league,
+            }
+
+    def get_scores(self, team=None, live=False):
+        payload = {"date": date.today().strftime("%Y-%m-%d")}
+
+        if live is True:
+            payload["live"] = live
+        if team is not None:
+            payload["team"] = team
+
+        response = requests.get(
+            "https://api.football-data.org/v4/matches",
+            headers={"X-Auth-Token": API_KEY},
+            params=payload,
+        )
+        if response.status_code == 200:
+            return utils.humanize_scores(team, live, response.json())
+        else:
+            return {
+                "response_code": response.status_code,
+                "message": "Could not return scores. Please try again later.",
             }

@@ -41,23 +41,26 @@ class Competition(object):
         spinner.stop()
         console.print(r)
 
-    def teams(self, league):
-        return "Get teams in league"
-
     def top_scorers(self, league):
-        return "Get top scoreres"
+        spinner.start()
 
+        r = api.get_top_scorers(league)
 
-class Team(object):
-
-    def team(self, team):
-        return "Show {team}".format(team=team)
+        spinner.stop()
+        console.print(r)
 
 
 class Match(object):
 
-    def matches(self, team):
-        return "Get {team} matches".format(team=team)
+    # will return matches for day of
+    # optionally filter by live matches or team
+    def scores(self, team=None, live=False):
+        # spinner.start()
+
+        r = api.get_scores(team, live)
+
+        # spinner.stop()
+        console.print(r)
 
 
 class Player(object):
@@ -73,7 +76,6 @@ class Footy(object):
 
     def __init__(self):
         self.competition = Competition()
-        self.team = Team()
         self.match = Match()
         self.player = Player()
 
